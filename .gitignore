@@ -1,0 +1,35 @@
+# Target & Build directories
+**/target/
+**/node_modules/
+**/dist/
+**/build/
+.mvn/
+.gradle/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+.DS_Store
+
+# Log files
+*.log
+logs/
+
+# Environment and sensitive data
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.p12
+
+# Database scratch/local data
+*.sqlite
+*.db
