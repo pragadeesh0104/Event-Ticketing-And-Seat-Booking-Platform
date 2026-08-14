@@ -1,0 +1,55 @@
+flowchart TD
+    subgraph Frontend["React.js Frontend (Vite + Bootstrap 5)"]
+        UI[User Interface Pages]
+        Components[Shared UI Components & Modals]
+        State[React State & Hooks]
+        Axios[Axios HTTP Client / JWT Interceptor]
+    end
+
+    subgraph Security["Spring Security Gateway & Authentication"]
+        SecFilter[JwtAuthenticationFilter]
+        AuthManager[AuthenticationManager]
+        UserDetailsService[CustomUserDetailsService]
+    end
+
+    subgraph API["Spring Boot Controller Layer (REST API)"]
+        AuthCtrl[AuthController]
+        EventCtrl[EventController]
+        VenueCtrl[VenueController]
+        BookingCtrl[BookingController]
+        PaymentCtrl[PaymentController]
+        TicketCtrl[TicketController]
+        OrgCtrl[OrganizerController]
+        AdminCtrl[AdminController]
+        RecCtrl[RecommendationController]
+    end
+
+    subgraph Service["Business Logic & Service Layer"]
+        AuthService[AuthService]
+        EventService[EventService]
+        BookingEngine[Seat Reservation Engine / Pessimistic Locking]
+        PaymentService[Payment Simulation Service]
+        TicketService[Ticket & QR Code Service]
+        NotificationService[Notification & SMTP Service]
+        RecEngine[Rule-Based Recommendation Engine]
+    end
+
+    subgraph Data["Persistence Layer (Spring Data JPA & Hibernate)"]
+        Repositories[JPA Repositories]
+        Flyway[Flyway Database Migration Engine]
+    end
+
+    subgraph Storage["Database Layer"]
+        MySQL[(MySQL 8 Database)]
+    end
+
+    UI --> Axios
+    Axios --> SecFilter
+    SecFilter --> AuthManager
+    AuthManager --> UserDetailsService
+    SecFilter --> API
+    API --> Service
+    BookingEngine --> Repositories
+    Service --> Repositories
+    Flyway --> MySQL
+    Repositories --> MySQL
