@@ -1,0 +1,102 @@
+classDiagram
+    class User {
+        +Long id
+        +String fullName
+        +String email
+        +String passwordHash
+        +Role role
+        +AccountStatus status
+        +LocalDateTime createdAt
+    }
+
+    class Venue {
+        +Long id
+        +String name
+        +String address
+        +String city
+        +Integer capacity
+        +List~Seat~ seats
+    }
+
+    class Event {
+        +Long id
+        +User organizer
+        +Venue venue
+        +String title
+        +String description
+        +String category
+        +LocalDate eventDate
+        +LocalTime startTime
+        +LocalTime endTime
+        +String bannerUrl
+        +EventStatus status
+    }
+
+    class Seat {
+        +Long id
+        +Venue venue
+        +String rowLabel
+        +String seatNumber
+        +SeatCategory category
+        +BigDecimal defaultPrice
+        +Boolean isActive
+    }
+
+    class Booking {
+        +Long id
+        +String bookingReference
+        +User customer
+        +Event event
+        +BigDecimal totalAmount
+        +BookingStatus status
+        +LocalDateTime expiresAt
+        +List~BookingSeat~ bookingSeats
+    }
+
+    class BookingSeat {
+        +Long id
+        +Booking booking
+        +Event event
+        +Seat seat
+        +BigDecimal seatPrice
+        +ReservationStatus status
+        +LocalDateTime holdExpiresAt
+    }
+
+    class Payment {
+        +Long id
+        +Booking booking
+        +String transactionReference
+        +BigDecimal amount
+        +PaymentMethod method
+        +PaymentStatus status
+        +LocalDateTime paidAt
+    }
+
+    class Ticket {
+        +Long id
+        +BookingSeat bookingSeat
+        +String ticketReference
+        +String qrVerificationToken
+        +TicketStatus status
+        +LocalDateTime issuedAt
+    }
+
+    class BookingService {
+        +holdSeats(HoldSeatsRequest) BookingResponse
+        +confirmBooking(Long bookingId, PaymentRequest) PaymentResponse
+        +cancelBooking(Long bookingId) void
+        +cleanupExpiredHolds() void
+    }
+
+    User "1" <-- "*" Event : organizes
+    Venue "1" <-- "*" Event : hosts
+    Venue "1" *-- "*" Seat : contains
+    User "1" <-- "*" Booking : places
+    Event "1" <-- "*" Booking : receives
+    Booking "1" *-- "*" BookingSeat : includes
+    Seat "1" <-- "*" BookingSeat : reserves
+    Booking "1" <-- "0..1" Payment : settles
+    BookingSeat "1" <-- "0..1" Ticket : generates
+    BookingService ..> Booking : manages
+    BookingService ..> BookingSeat : locks & reserves
